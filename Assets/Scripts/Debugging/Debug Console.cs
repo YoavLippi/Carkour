@@ -10,9 +10,12 @@ public class DebugConsole : MonoBehaviour
     public Vector2 moveInput;
     public float moveSpeed;
     public bool isGrounded;
+    public bool isPressingDirection;
+    public bool isRolling;
 
     private void Update()
     {
-        console.text = $"DEBUG CONSOLE:\nDirection Input {moveInput}\nMove Speed: {moveSpeed}\nIs Grounded: {isGrounded}";
+        console.text = $"DEBUG CONSOLE:\nDirection Input {moveInput}\nMove Speed: {moveSpeed}\n" +
+                       $"Is Grounded: {isGrounded}\nIs pressing dir:{isPressingDirection}\nIs Rolling:{isRolling}";
     }
 }

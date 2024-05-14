@@ -17,12 +17,15 @@ public class CarController : MonoBehaviour
     [Header("Physics")]
     //dont want to index, rather easier to just have explicit references to each
     //[SerializeField] private WheelCollider[] wheels;
+    [SerializeField] private float gravityScale;
     [SerializeField] private BoxCollider carCollider;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private WheelCollider frWheel;
     [SerializeField] private WheelCollider flWheel;
     [SerializeField] private WheelCollider brWheel;
     [SerializeField] private WheelCollider blWheel;
+
+    [SerializeField] private Transform orientationFixer;
     /*[SerializeField] private BoxCollider frWheel;
     [SerializeField] private BoxCollider flWheel;
     [SerializeField] private BoxCollider brWheel;
@@ -36,6 +39,8 @@ public class CarController : MonoBehaviour
     //While acceleration is constant, the maximum speed a car can reach is what is tempered by the throttle
     [SerializeField] private AnimationCurve velocityCapCurve;
     [SerializeField] private float turnRadius;
+    [SerializeField] private float aerialTurnAcceleration;
+    [SerializeField] private float maxAerialTurnSpeed;
     [SerializeField] private float softVelocityCap = 10f;
     [SerializeField] private float hardVelocityCap = 20f;
     [SerializeField] private float boostMultiplier = 1.1f;
@@ -46,6 +51,8 @@ public class CarController : MonoBehaviour
     [SerializeField] private Vector2 moveDirection;
 
     [SerializeField] private bool isBoosting = false;
+    [SerializeField] private bool isRolling = false;
+    [SerializeField] private bool isRollingRight = false;
 
     public float SoftVelocityCap
     {
@@ -75,8 +82,25 @@ public class CarController : MonoBehaviour
     
     private void FixedUpdate()
     {
+        if (currentAcceleration == 0 && currentBreakForce == 0)
+        {
+            rb.AddForce(Physics.gravity*gravityScale, ForceMode.Acceleration);
+        }
         Move();
-        DoTurn();
+        if (IsFullyGrounded())
+        {
+            DoTurn();
+        }
+        else
+        {
+            DoAerialMovement();
+        }
+        
+        debugConsole.isPressingDirection = moveDirection.magnitude != 0;
+        if (!IsPartiallyGrounded() && (moveDirection.magnitude == 0 || isRollingRight))
+        {
+            rb.angularVelocity = new Vector3(0,0,0);
+        }
     }
 
     private void DoTurn()
@@ -103,12 +127,50 @@ public class CarController : MonoBehaviour
             
         //using turning curve to evaluate the rotation speed
         float turningSpeedTemp = IsFullyGrounded() ? turnRadius * turnEffectorCurve.Evaluate(forwardVecUnscaled) : turnRadius;
-            
+        
         //Getting the rotation direction based on the calculated vector
         Quaternion targetRotation = Quaternion.LookRotation(resultingTurn);
-            
         //Smoothly interpolating
         rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turningSpeedTemp * Time.deltaTime);
+    }
+
+    private void DoAerialMovement()
+    {
+        //yaw
+        //rb.AddTorque(rb.transform.up*(aerialTurnAcceleration*moveDirection.x), ForceMode.Acceleration);
+        
+        //pitch
+        rb.AddTorque(rb.transform.right*(aerialTurnAcceleration*moveDirection.y), ForceMode.Acceleration);
+        
+        //roll
+        if (isRolling)
+        {
+            rb.AddTorque(-rb.transform.forward*(aerialTurnAcceleration*moveDirection.x), ForceMode.Acceleration);
+        }
+        else
+        {
+            rb.AddTorque(rb.transform.up*(aerialTurnAcceleration*moveDirection.x), ForceMode.Acceleration);
+        }
+        
+        //air roll right specifically
+        if (isRollingRight)
+        {
+            rb.AddTorque(-rb.transform.forward*(aerialTurnAcceleration), ForceMode.Acceleration);
+        }
+        /*rb.angularVelocity = new Vector3(
+            Mathf.Clamp(rb.angularVelocity.x, -maxAerialTurnSpeed, maxAerialTurnSpeed), 
+            Mathf.Clamp(rb.angularVelocity.y, -maxAerialTurnSpeed, maxAerialTurnSpeed),
+            rb.angularVelocity.z);*/
+        rb.angularVelocity = ClampVector(rb.angularVelocity, maxAerialTurnSpeed);
+    }
+
+    private Vector3 ClampVector(Vector3 vector, float maxMagnitude)
+    {
+        if (vector.magnitude > maxMagnitude)
+        {
+            vector = vector.normalized * maxMagnitude;
+        }
+        return vector;
     }
 
     private void Move()
@@ -140,8 +202,8 @@ public class CarController : MonoBehaviour
             rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turningSpeedTemp * Time.deltaTime);
             */
 
-            rb.AddForce(rb.transform.forward*currentAcceleration, ForceMode.Acceleration);
-            rb.AddForce(-(rb.transform.forward * currentBreakForce), ForceMode.Acceleration);
+            rb.AddForce(orientationFixer.forward*currentAcceleration, ForceMode.Acceleration);
+            rb.AddForce(-(orientationFixer.forward * currentBreakForce), ForceMode.Acceleration);
             
             /*int turnDirection = 1;
             if (moveDirection.x < 0)
@@ -177,7 +239,7 @@ public class CarController : MonoBehaviour
         
         if (isBoosting)
         {
-            rb.AddForce(rb.transform.forward*(accelerationCurve.Evaluate(1)*boostMultiplier), ForceMode.Acceleration);
+            rb.AddForce(orientationFixer.forward*(accelerationCurve.Evaluate(1)*boostMultiplier), ForceMode.Acceleration);
         }
         //Hard clamping all directional velocities
         localVelocity.x = Mathf.Clamp(localVelocity.x, -hardVelocityCap, hardVelocityCap);
@@ -231,9 +293,29 @@ public class CarController : MonoBehaviour
         Debug.Log($"Powersliding");
     }
 
+    private void OnAirRoll()
+    {
+        float checker = playerMovement.actions.FindAction("AirRoll").ReadValue<float>();
+        Debug.Log($"Air Roll {(checker >=0.5f ? "pressed":"released")}");
+        debugConsole.isRolling = checker >= 0.5f;
+        isRolling = checker >= 0.5f;
+    }
+
+    private void OnAirRollRight()
+    {
+        float checker = playerMovement.actions.FindAction("AirRollRight").ReadValue<float>();
+        Debug.Log($"Air Roll Right {(checker >=0.5f ? "pressed":"released")}");
+        isRollingRight = checker >= 0.5f;
+    }
+
     public bool IsFullyGrounded()
     {
         return wheelHandlerFr.IsGrounded && wheelHandlerFl.IsGrounded && wheelHandlerBr.IsGrounded && wheelHandlerBl.IsGrounded;
+    }
+
+    public bool IsPartiallyGrounded()
+    {
+        return wheelHandlerFr.IsGrounded || wheelHandlerFl.IsGrounded || wheelHandlerBr.IsGrounded || wheelHandlerBl.IsGrounded;
     }
 
     public static float MapFloat(float fromMin, float fromMax, float toMin, float toMax, float val)

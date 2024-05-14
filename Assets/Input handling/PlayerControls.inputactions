@@ -47,13 +47,31 @@
                     "id": "e8a57814-fe22-42d7-a7be-c53190701b42",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
                     "name": "Boost",
                     "type": "Button",
                     "id": "a8b71905-7770-4c58-ae38-41a2763ed6d5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AirRoll",
+                    "type": "Button",
+                    "id": "ea781ebc-c95e-44b3-a470-0f3acb3dde0d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AirRollRight",
+                    "type": "Button",
+                    "id": "55610363-5d8f-4509-aaaa-b3055a5e7b09",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press(behavior=2)",
@@ -75,7 +93,7 @@
                 {
                     "name": "WASD",
                     "id": "00ca640b-d935-4593-8157-c05846ea39b3",
-                    "path": "Dpad",
+                    "path": "Dpad(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -294,6 +312,17 @@
                 },
                 {
                     "name": "",
+                    "id": "78ca4b12-ed0d-4600-98d2-95fe35e65411",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Powerslide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "a7a094a0-b4dd-44af-b28a-5837fbe4bdf6",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -311,6 +340,50 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3858582b-252c-448b-807f-2ef9fb276513",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "AirRoll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d93412b-058f-4046-bc2a-f4bd30c9cf77",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "AirRoll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f9f978ed-03ec-4897-bb65-657f6f65445b",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "AirRollRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d2e4bd01-8049-4a38-a8f8-36ab1aea7fb3",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "AirRollRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

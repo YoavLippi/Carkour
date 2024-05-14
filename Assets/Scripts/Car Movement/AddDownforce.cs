@@ -12,6 +12,8 @@ public class AddDownforce : MonoBehaviour
     [SerializeField] private Rigidbody rb;
 
     [SerializeField] private AnimationCurve downforceCurve;
+
+    [SerializeField] private bool debugIsGrounded;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,11 +25,11 @@ public class AddDownforce : MonoBehaviour
     private void FixedUpdate()
     {
         Debug.DrawLine(transform.position, transform.position - (transform.up*10), Color.blue);
-        if (thisCarController.IsFullyGrounded())
+        if (thisCarController.IsFullyGrounded() || debugIsGrounded)
         {
             Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
             float speedFactor = CarController.MapFloat(0, thisCarController.SoftVelocityCap, 0, 1, Mathf.Abs(localVelocity.z));
-            rb.AddForce(-transform.up * downforceCurve.Evaluate(speedFactor));
+            rb.AddForce(-transform.up * downforceCurve.Evaluate(speedFactor), ForceMode.Acceleration);
         }
     }
 }

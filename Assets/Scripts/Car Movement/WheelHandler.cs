@@ -11,6 +11,10 @@ public class WheelHandler : MonoBehaviour
 
     [SerializeField] private bool isGrounded;
 
+    [SerializeField] private Rigidbody rb;
+
+    [SerializeField] private float stickiness;
+
     public bool IsGrounded
     {
         get => isGrounded;
@@ -44,8 +48,44 @@ public class WheelHandler : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerStay(Collider other)
     {
-        Debug.Log("Wheeeeeeeeeeeeeeeeeel");
+        //Debug.Log("Test entered");
+        RaycastHit hit;
+        int layerMask = LayerMask.NameToLayer("CarCol");
+        //bitwise inversion
+        layerMask = ~layerMask;
+        if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, drawDistance*2, layerMask))
+        {
+            Debug.Log("Hitting floor");
+            Vector3 forceDirection = hit.point - transform.position;
+            rb.AddForceAtPosition(forceDirection*stickiness, transform.position, ForceMode.Acceleration);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        StartCoroutine(CoyoteForce());
+    }
+
+    private IEnumerator CoyoteForce()
+    {
+        float timeApplied = 0.5f, currentTime = 0;
+        do
+        {
+            RaycastHit hit;
+            int layerMask = LayerMask.NameToLayer("CarCol");
+            //bitwise inversion
+            layerMask = ~layerMask;
+            if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, drawDistance * 4, layerMask))
+            {
+                Debug.Log("Hitting floor");
+                Vector3 forceDirection = hit.point - transform.position;
+                rb.AddForceAtPosition(forceDirection * stickiness, transform.position, ForceMode.Acceleration);
+            }
+
+            currentTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        } while (timeApplied < currentTime);
     }
 }
