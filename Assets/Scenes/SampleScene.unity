@@ -801,7 +801,7 @@ MonoBehaviour:
   drawDistance: 1
   isGrounded: 0
   rb: {fileID: 1725156758}
-  stickiness: 100
+  stickiness: 50
 --- !u!64 &440717020
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1002,7 +1002,7 @@ MonoBehaviour:
   drawDistance: 1
   isGrounded: 0
   rb: {fileID: 1725156758}
-  stickiness: 100
+  stickiness: 50
 --- !u!64 &722633669
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1328,6 +1328,7 @@ MonoBehaviour:
   moveSpeed: 0
   isGrounded: 0
   isPressingDirection: 0
+  isRolling: 0
 --- !u!1 &1098932745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,6 +1739,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3451118302482216456, guid: c6f97bf51fa5a9148a5cc4a6c31da691,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: c6f97bf51fa5a9148a5cc4a6c31da691,
+        type: 3}
       propertyPath: m_ProvidesContacts
       value: 1
       objectReference: {fileID: 0}
@@ -1932,7 +1938,7 @@ MonoBehaviour:
   drawDistance: 1
   isGrounded: 0
   rb: {fileID: 1725156758}
-  stickiness: 100
+  stickiness: 50
 --- !u!64 &1720350131
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2116,7 +2122,7 @@ MonoBehaviour:
   wheelHandlerBr: {fileID: 722633668}
   wheelHandlerBl: {fileID: 1948149631}
   playerMovement: {fileID: 1725156760}
-  gravityScale: 0
+  gravityScale: 2
   carCollider: {fileID: 1725156755}
   rb: {fileID: 1725156758}
   frWheel: {fileID: 171104460}
@@ -2276,9 +2282,11 @@ MonoBehaviour:
   maxAerialTurnSpeed: 4
   softVelocityCap: 25
   hardVelocityCap: 40
-  boostMultiplier: 1.1
+  boostMultiplier: 0.8
   moveDirection: {x: 0, y: 0}
   isBoosting: 0
+  isRolling: 0
+  isRollingRight: 0
 --- !u!114 &1725156760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2843,7 +2851,7 @@ MonoBehaviour:
   drawDistance: 1
   isGrounded: 0
   rb: {fileID: 1725156758}
-  stickiness: 100
+  stickiness: 50
 --- !u!64 &1948149632
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2891,7 +2899,7 @@ Transform:
   m_GameObject: {fileID: 1958543488}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

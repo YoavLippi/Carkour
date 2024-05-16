@@ -97,7 +97,7 @@ public class CarController : MonoBehaviour
         }
         
         debugConsole.isPressingDirection = moveDirection.magnitude != 0;
-        if (!IsPartiallyGrounded() && (moveDirection.magnitude == 0 || isRollingRight))
+        if (!IsPartiallyGrounded() && moveDirection.magnitude == 0 && !isRollingRight)
         {
             rb.angularVelocity = new Vector3(0,0,0);
         }
@@ -155,7 +155,7 @@ public class CarController : MonoBehaviour
         //air roll right specifically
         if (isRollingRight)
         {
-            rb.AddTorque(-rb.transform.forward*(aerialTurnAcceleration), ForceMode.Acceleration);
+            rb.AddTorque(-rb.transform.forward*(aerialTurnAcceleration*1), ForceMode.Acceleration);
         }
         /*rb.angularVelocity = new Vector3(
             Mathf.Clamp(rb.angularVelocity.x, -maxAerialTurnSpeed, maxAerialTurnSpeed), 

@@ -79,13 +79,13 @@ public class WheelHandler : MonoBehaviour
             layerMask = ~layerMask;
             if (Physics.SphereCast(transform.position, 0.5f, -transform.up, out hit, drawDistance * 4, layerMask))
             {
-                Debug.Log("Hitting floor");
+                Debug.Log("Hitting floor coyote");
                 Vector3 forceDirection = hit.point - transform.position;
                 rb.AddForceAtPosition(forceDirection * stickiness, transform.position, ForceMode.Acceleration);
             }
 
             currentTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
-        } while (timeApplied < currentTime);
+        } while (timeApplied > currentTime);
     }
 }
