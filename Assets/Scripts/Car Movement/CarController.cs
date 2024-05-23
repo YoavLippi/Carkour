@@ -20,10 +20,14 @@ public class CarController : MonoBehaviour
     [SerializeField] private float gravityScale;
     [SerializeField] private BoxCollider carCollider;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private WheelCollider frWheel;
-    [SerializeField] private WheelCollider flWheel;
-    [SerializeField] private WheelCollider brWheel;
-    [SerializeField] private WheelCollider blWheel;
+    //[SerializeField] private WheelCollider frWheel;
+    //[SerializeField] private WheelCollider flWheel;
+    //[SerializeField] private WheelCollider brWheel;
+    //[SerializeField] private WheelCollider blWheel;
+    [SerializeField] private WheelHandlerRaycast frWheel;
+    [SerializeField] private WheelHandlerRaycast flWheel;
+    [SerializeField] private WheelHandlerRaycast brWheel;
+    [SerializeField] private WheelHandlerRaycast blWheel;
 
     [SerializeField] private Transform orientationFixer;
     /*[SerializeField] private BoxCollider frWheel;
@@ -250,6 +254,7 @@ public class CarController : MonoBehaviour
 
     private void OnBoost()
     {
+        if (!enabled) return;
         float checker = playerMovement.actions.FindAction("Boost").ReadValue<float>();
         Debug.Log($"Boost {(checker >=0.5f ? "pressed":"released")}");
         isBoosting = (checker >= 0.5f);
@@ -257,13 +262,15 @@ public class CarController : MonoBehaviour
 
     private void OnMove()
     {
+        if (!enabled) return;
         moveDirection = playerMovement.actions.FindAction("Move").ReadValue<Vector2>();
         debugConsole.moveInput = moveDirection;
-        Debug.Log($"Moving with {moveDirection}");
+        //Debug.Log($"Moving with {moveDirection}");
     }
 
     private void OnThrottle()
     {
+        if (!enabled) return;
         float accelAmount = playerMovement.actions.FindAction("Throttle").ReadValue<float>();
         Debug.Log($"Throttling with {accelAmount}");
         //currentAcceleration = MapFloat(0, 1, 0, acceleration, accelAmount);
@@ -277,6 +284,7 @@ public class CarController : MonoBehaviour
 
     private void OnReverse()
     {
+        if (!enabled) return;
         float reverseAmount = playerMovement.actions.FindAction("Reverse").ReadValue<float>();
         Debug.Log($"Reversing with {reverseAmount}");
         //currentBreakForce = MapFloat(0, 1, 0, breakForce, reverseAmount);
@@ -290,11 +298,13 @@ public class CarController : MonoBehaviour
 
     private void OnPowerslide()
     {
+        if (!enabled) return;
         Debug.Log($"Powersliding");
     }
 
     private void OnAirRoll()
     {
+        if (!enabled) return;
         float checker = playerMovement.actions.FindAction("AirRoll").ReadValue<float>();
         Debug.Log($"Air Roll {(checker >=0.5f ? "pressed":"released")}");
         debugConsole.isRolling = checker >= 0.5f;
@@ -303,6 +313,7 @@ public class CarController : MonoBehaviour
 
     private void OnAirRollRight()
     {
+        if (!enabled) return;
         float checker = playerMovement.actions.FindAction("AirRollRight").ReadValue<float>();
         Debug.Log($"Air Roll Right {(checker >=0.5f ? "pressed":"released")}");
         isRollingRight = checker >= 0.5f;
@@ -310,12 +321,14 @@ public class CarController : MonoBehaviour
 
     public bool IsFullyGrounded()
     {
-        return wheelHandlerFr.IsGrounded && wheelHandlerFl.IsGrounded && wheelHandlerBr.IsGrounded && wheelHandlerBl.IsGrounded;
+        return frWheel.IsGrounded && flWheel.IsGrounded && brWheel.IsGrounded && blWheel.IsGrounded;
+        //return false;
     }
 
     public bool IsPartiallyGrounded()
     {
-        return wheelHandlerFr.IsGrounded || wheelHandlerFl.IsGrounded || wheelHandlerBr.IsGrounded || wheelHandlerBl.IsGrounded;
+        return frWheel.IsGrounded || flWheel.IsGrounded || brWheel.IsGrounded || blWheel.IsGrounded;
+        //return false;
     }
 
     public static float MapFloat(float fromMin, float fromMax, float toMin, float toMax, float val)
