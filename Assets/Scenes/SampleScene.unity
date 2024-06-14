@@ -595,7 +595,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.11152874, y: -0, z: -0, w: 0.99376124}
-  m_LocalPosition: {x: 0, y: 11.096505, z: -61.8442}
+  m_LocalPosition: {x: 0, y: 7.91, z: -61.8442}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -661,8 +661,8 @@ MonoBehaviour:
   lookTarget: {fileID: 2010818943}
   attachedCar: {fileID: 1725156762}
   followPosFloating: {x: 0, y: 6.852585, z: -13.14103}
-  rotationFollowSpeed: 1
-  posFollowSpeed: 1
+  rotationFollowSpeed: 3
+  posFollowSpeed: 3
 --- !u!1 &341788735
 GameObject:
   m_ObjectHideFlags: 0
@@ -2980,7 +2980,7 @@ Transform:
   m_GameObject: {fileID: 1725156753}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.25, z: -48.7}
+  m_LocalPosition: {x: 0, y: 2.8, z: -48.7}
   m_LocalScale: {x: 4.067005, y: 1.7465574, z: 5.7}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3080,7 +3080,7 @@ Rigidbody:
   m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0
-  m_CenterOfMass: {x: 0, y: -1, z: 0}
+  m_CenterOfMass: {x: 0, y: -0.3, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -3089,7 +3089,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -3331,19 +3331,20 @@ MonoBehaviour:
   boostRenderer: {fileID: 116843821}
   otherBoostRenderer: {fileID: 1530140922}
   turnArrow: {fileID: 1708064501}
-  flipTurnArrow: {fileID: 0}
-  gravityScale: 9.8
+  gravityScale: 15
   gravityBlendFactor: 1
   downforceScale: 9.8
   softVelocityCapForward: 40
   softVelocityCapBackward: 30
   hardVelocityCap: 60
-  jumpForce: 10
+  jumpForce: 15
   maxAerialTurnSpeed: 5
   aerialTurnAcceleration: 10
-  boostAcceleration: 20
+  boostAcceleration: 23
   slideGripFactor: 0.6
   flipDeadzone: 0.8
+  totalFlipSpeed: 40
+  velocityDampingFactor: 0.05
   steeringCurve:
     serializedVersion: 2
     m_Curve:
@@ -3467,6 +3468,48 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  flipSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.42993492
+      outSlope: -0.049987905
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.074526586
+    - serializedVersion: 3
+      time: 0.30491462
+      value: 0.89167225
+      inSlope: -1.281719
+      outSlope: -1.281719
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.089714944
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6379087
+      value: 0.170303
+      inSlope: -1.21523
+      outSlope: -1.21523
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.14882824
+      outSlope: -0.14882824
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.17603776
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   debugConsole: {fileID: 0}
   moveDirection: {x: 0, y: 0}
   currentAcceleration: 0
@@ -3480,6 +3523,10 @@ MonoBehaviour:
   reverseAmount: 0
   turnDegrees: 0
   currentFlipDirection: 0
+  hasFlip: 0
+  currentState: 2
+  aerialJumpForce: 20
+  aerialNeutralJumpForce: 7
 --- !u!1 &1726623897
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,9 +35,10 @@ public class WheelHandlerRaycast : MonoBehaviour
         set => isGrounded = value;
     }
 
-    //a huge portion of this is coming from this explaination: https://www.youtube.com/watch?v=CdPYlj5uZeI&t=273s
+    //a huge portion of this is coming from this explanation: https://www.youtube.com/watch?v=CdPYlj5uZeI&t=273s
     private void FixedUpdate()
     {
+        //actively adjusts for changing raycast length in-editor, otherwise it does this at runtime
         #if UNITY_EDITOR
             wheelDiameter = wheelRadius * 2;
         #endif
@@ -110,18 +111,7 @@ public class WheelHandlerRaycast : MonoBehaviour
             float accelerationAmount = parentPhysics.CurrentAcceleration;
             float breakAmount = parentPhysics.CurrentBreakForce;
             
-            if (tireWorldVelocity.magnitude < parentPhysics.CurrentVelocityCap)
-            {
-                carBody.AddForceAtPosition(accelDir*(accelerationAmount-breakAmount), carBody.position, ForceMode.Acceleration);
-            }
-
-            /*if (tireWorldVelocity.magnitude < parentPhysics.CurrentVelocityCap)
-            {
-                carBody.AddForceAtPosition(accelDir*-breakAmount, carBody.position, ForceMode.Acceleration);
-            }*/
-            
-            //TODO: apply rubberband instead of hard clamping
-            carBody.velocity = CarPhysics.ClampVector(carBody.velocity, parentPhysics.CurrentVelocityCap);
+            carBody.AddForceAtPosition(accelDir*(accelerationAmount-breakAmount), carBody.position, ForceMode.Acceleration);
         }
     }
     
